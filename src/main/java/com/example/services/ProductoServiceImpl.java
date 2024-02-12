@@ -27,6 +27,11 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Producto> findAll(Sort sort) {
         return productoDao.findAll(sort);
     }
+    
+    @Override
+    public List<Producto> findAll() {
+        return productoDao.findAll();
+    }
 
     @Override
     public Producto findById(int id) {
