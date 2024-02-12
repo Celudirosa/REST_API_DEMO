@@ -20,32 +20,27 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Page<Producto> findAll(Pageable pageable) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        return productoDao.findAll(pageable);
     }
 
     @Override
     public List<Producto> findAll(Sort sort) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        return productoDao.findAll(sort);
     }
 
     @Override
     public Producto findById(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return productoDao.findById(id);
     }
 
     @Override
     public Producto save(Producto producto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        return productoDao.save(producto);
     }
 
     @Override
     public void delete(Producto producto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        productoDao.delete(producto);
     }
 
 }
