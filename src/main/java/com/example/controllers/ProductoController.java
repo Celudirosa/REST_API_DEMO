@@ -1,7 +1,9 @@
 package com.example.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entities.Producto;
 import com.example.services.ProductoService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -53,5 +60,35 @@ public class ProductoController {
 
         return responseEntity;
     }
+
+    // metodo que persiste un producto y valida que el producto este bien formado
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> saveProduct(@Valid @RequestBody Producto producto, 
+        BindingResult validationResults) {
+
+        Map<String, Object> responseAsMap = new HashMap<>();
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+
+        // comprobar si el producto tiene errores
+        if (validationResults.hasErrors()) {
+            List<String> errores = new ArrayList<>();
+            List<ObjectError> objectErrors = validationResults.getAllErrors();
+
+            objectErrors.forEach(objectError -> {
+                errores.add(objectError.getDefaultMessage());
+            });
+
+            responseAsMap.put("errores", errores);
+            responseAsMap.put("Producto mal", producto);
+            
+            responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
+            
+            return responseEntity;
+        }
+
+        // no hay errores en el producto
+        return responseEntity;
+    }
+
 
 }
