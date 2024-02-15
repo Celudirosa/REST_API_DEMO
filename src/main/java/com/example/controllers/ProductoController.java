@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -143,8 +145,7 @@ public class ProductoController {
             responseAsMap.put("Producto actualizado", productoActualizado);
             responseEntity = new ResponseEntity<Map<String,Object>>(responseAsMap, HttpStatus.OK);
         } catch (DataAccessException e) {
-            String error = "Error al intentar actualizar el producto y la causa mas probable es: " + 
-                e.getMostSpecificCause();
+            String error = "Error al intentar actualizar el producto y la causa mas probable es: " + e.getMostSpecificCause();
             responseAsMap.put("error", error);
             responseAsMap.put("Producto que se ha intentado actualizar", producto);
             responseEntity = new ResponseEntity<Map<String,Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -153,5 +154,34 @@ public class ProductoController {
         return responseEntity;
     }
 
+    // metodo que recupera un producto por el ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> findProductById(@PathVariable(name = "id", required = true) Integer idProduct) throws IOException {
+
+        Map<String, Object> responseMap = new HashMap<>();
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+
+        try {
+            Producto producto = productoService.findById(idProduct);
+
+            if (producto != null) {
+                String successMessage = "Producto con id " + idProduct + " encontrado";
+                responseMap.put("successMessage", successMessage);
+                responseMap.put("producto", producto);
+                responseEntity = new ResponseEntity<Map<String,Object>>(responseMap, HttpStatus.OK);
+            } else {
+                String errorMessage = "Producto con id " + idProduct + " no encontrado";
+                responseMap.put("errorMessage", errorMessage);
+                responseEntity = new ResponseEntity<Map<String,Object>>(responseMap, HttpStatus.NOT_FOUND);
+            }
+
+        } catch (DataAccessException e) {
+            String error = "Error al buscar el producto con id " + idProduct + " y la causa mas probable es: " + e.getMostSpecificCause();
+            responseMap.put("error", error);
+            responseEntity = new ResponseEntity<Map<String,Object>>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return responseEntity;
+    }
 
 }
