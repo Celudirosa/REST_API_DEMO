@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -65,6 +64,7 @@ public class ProductoController {
         }
 
         return responseEntity;
+
     }
 
     // metodo que persiste un producto y valida que el producto este bien formado
@@ -109,6 +109,7 @@ public class ProductoController {
         }
 
         return responseEntity;
+
     }
 
     // metodo que actualiza un producto cuyo id recibe como parametro
@@ -134,6 +135,7 @@ public class ProductoController {
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
             
             return responseEntity;
+
         }
 
         // no hay errores en el producto, pues actualizar el producto
@@ -153,6 +155,7 @@ public class ProductoController {
         }
 
         return responseEntity;
+
     }
 
     // metodo que recupera un producto por el ID
@@ -183,6 +186,7 @@ public class ProductoController {
         }
 
         return responseEntity;
+
     }
 
     // eliminar un producto por el ID
@@ -204,6 +208,7 @@ public class ProductoController {
         }
 
         return responseEntity;
+
     }
 
 }
