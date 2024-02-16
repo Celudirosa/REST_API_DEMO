@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entities.Producto;
+import com.example.helpers.FileUploadUtil;
+import com.example.model.FileUploadResponse;
 import com.example.services.ProductoService;
 
 import jakarta.validation.Valid;
@@ -40,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final FileUploadUtil fileUploadUtil;
 
     // el metodo responde a una request del tipo:
     // http://localhost:8080/productos?page=0&size=3
@@ -72,6 +75,13 @@ public class ProductoController {
     }
 
     // metodo que persiste un producto y valida que el producto este bien formado
+    // Persiste un producto en la base de datos @throws IOException
+    // Guardar (Persistir), un producto, con su presentacion en la base de datos
+    // Para probarlo con POSTMAN: Body -> form-data -> producto -> CONTENT TYPE ->
+    // application/json
+    // no se puede dejar el content type en Auto, porque de lo contrario asume
+    // application/octet-stream
+    // y genera una exception MediaTypeNotSupported
     @PostMapping(consumes = "multipart/form-data")
     @Transactional
     public ResponseEntity<Map<String, Object>> saveProduct(
@@ -102,7 +112,25 @@ public class ProductoController {
 
         // comprobamos si hay imagenes para el producto
         if (file != null) {
+            try {
+                String fileName = file.getOriginalFilename();
+                String fileCode = fileUploadUtil.saveFile(fileName, file);
+                producto.setFile(fileCode + "-" + fileName);
+
+                // hay que devolver informacion respecto al archivo que se ha guardado
+                // para lo cual en una capa model vamos a crear un record con la info del archivo que vamos a devolver
+                FileUploadResponse fileUploadResponse = FileUploadResponse
+                    .builder()
+                    .fileName(fileCode + "-" + fileName)
+                    .downloadURI("/productos/downloadFile/" + fileCode + "-" + fileName)
+                    .size(file.getSize())
+                    .build();
             
+            responseAsMap.put("info de la imagen: ", fileUploadResponse);        
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // no hay errores en el producto, pues a persistir el producto
