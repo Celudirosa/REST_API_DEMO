@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entities.Producto;
 import com.example.services.ProductoService;
@@ -50,6 +53,7 @@ public class ProductoController {
         ResponseEntity<List<Producto>> responseEntity = null;
         Sort sortByName = Sort.by("name");
         List<Producto> productos = new ArrayList<>();
+
         // comprobamos si se han enviado page y size
         if (page != null && size != null) { // si esta condicion se cumple es que quieren el producto paginado
             // queremos devolver los productos paginados
@@ -68,9 +72,13 @@ public class ProductoController {
     }
 
     // metodo que persiste un producto y valida que el producto este bien formado
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> saveProduct(@Valid @RequestBody Producto producto, 
-        BindingResult validationResults) {
+    @PostMapping(consumes = "multipart/form-data")
+    @Transactional
+    public ResponseEntity<Map<String, Object>> saveProduct(
+        @Valid 
+        @RequestPart(name = "producto", required = true) Producto producto, 
+        BindingResult validationResults,
+        @RequestPart(name = "file", required = false) MultipartFile file) {
 
         Map<String, Object> responseAsMap = new HashMap<>();
         ResponseEntity<Map<String, Object>> responseEntity = null;
@@ -92,8 +100,12 @@ public class ProductoController {
             return responseEntity;
         }
 
-        // no hay errores en el producto, pues a persistir el producto
+        // comprobamos si hay imagenes para el producto
+        if (file != null) {
+            
+        }
 
+        // no hay errores en el producto, pues a persistir el producto
         try {
             Producto productoPersistido = productoService.save(producto);
             String successMessage = "El producto se ha persistido exitosamente";
