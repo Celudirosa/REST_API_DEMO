@@ -36,7 +36,8 @@ public class Usuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
-    private String name;
+    @Column(name = "username")
+    private String userName;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, 
