@@ -38,5 +38,4 @@ public class Presentacion implements Serializable{
     @JsonIgnore
     private List<Producto> productos;
 
-    
 }

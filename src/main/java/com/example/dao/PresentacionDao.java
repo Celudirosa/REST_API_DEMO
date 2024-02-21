@@ -8,6 +8,4 @@ import com.example.entities.Presentacion;
 @Repository
 public interface PresentacionDao extends JpaRepository<Presentacion, Integer> {
 
-    
-
 }

@@ -2,7 +2,6 @@ package com.example.entities;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -51,11 +50,11 @@ public class Producto implements Serializable{
     @Min(value = 0, message = "El precio no puede ser menor que 0")
     private double price;
 
+    private String file;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     // https://stackoverflow.com/questions/67353793/what-does-jsonignorepropertieshibernatelazyinitializer-handler-do
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Presentacion presentacion;
-
-
 
 }
