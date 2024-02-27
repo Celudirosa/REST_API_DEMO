@@ -134,4 +134,20 @@ public class UserRepositoryTests {
         assertThat(foundUser.getId()).isNotEqualTo(0);
     }
 
+    @SuppressWarnings("null")
+    @Test
+    @DisplayName("Test para actualizar un user")
+    public void testUpdateUser() {
+        // given
+        ourUserRepository.save(ourUser0);
+        // when
+        OurUser saveUser = ourUserRepository.findById(ourUser0.getId()).get();
+
+        saveUser.setEmail("celia@celia.com");
+
+        OurUser userUpdate = ourUserRepository.save(saveUser);
+        // then
+        assertThat(userUpdate.getEmail()).isEqualTo("celia@celia.com");
+    }
+
 }
