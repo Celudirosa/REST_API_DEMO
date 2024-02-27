@@ -122,4 +122,16 @@ public class UserRepositoryTests {
         assertThat(users.size()).isEqualTo(2);
     }
 
+    @SuppressWarnings("null")
+    @Test
+    @DisplayName("Test para encontrar un user por el id")
+    public void testFindById() {
+        // given
+        ourUserRepository.save(ourUser0);
+        // when
+        OurUser foundUser = ourUserRepository.findById(ourUser0.getId()).get();
+        // then
+        assertThat(foundUser.getId()).isNotEqualTo(0);
+    }
+
 }
