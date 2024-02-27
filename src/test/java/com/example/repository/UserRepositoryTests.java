@@ -154,4 +154,18 @@ public class UserRepositoryTests {
         assertThat(userUpdate.getRole()).isEqualTo(Role.ADMIN);
     }
 
+    @SuppressWarnings("null")
+    @DisplayName("Test para eliminar un user")
+    @Test
+    public void testDeleteUser() {
+        // given
+        ourUserRepository.save(ourUser0);
+        // when
+        ourUserRepository.delete(ourUser0);
+
+        Optional<OurUser> deleteUser = ourUserRepository.findByEmail(ourUser0.getEmail());
+        // then
+        assertThat(deleteUser).isEmpty();
+    }
+
 }
