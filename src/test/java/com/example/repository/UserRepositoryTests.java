@@ -144,10 +144,14 @@ public class UserRepositoryTests {
         OurUser saveUser = ourUserRepository.findById(ourUser0.getId()).get();
 
         saveUser.setEmail("celia@celia.com");
+        saveUser.setPassword("1111");
+        saveUser.setRole(Role.ADMIN);
 
         OurUser userUpdate = ourUserRepository.save(saveUser);
         // then
         assertThat(userUpdate.getEmail()).isEqualTo("celia@celia.com");
+        assertThat(userUpdate.getPassword()).isEqualTo("1111");
+        assertThat(userUpdate.getRole()).isEqualTo(Role.ADMIN);
     }
 
 }
